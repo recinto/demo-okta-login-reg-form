@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>My Great Company - Home</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/css/site.css" />
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src="/js/app.js"></script>
+    </head>
+    <body>
+        <div data-role="page">
+            <div data-role="header">
+                <div>
+                    <img src="/img/logo.png" />
+                </div>
+                <div>This is My Great Compnay!  We do GREAT things here.  Bask in our Greatness!!!</div>
+            </div>
+            <div data-role="main" class="ui-content">
+                <strong>My Account</strong><br/>
+                <div id="loginLink" class="hideMe">
+                    <a href="#floatingLogin" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-check ui-btn-icon-left">Login</a>
+                    <div id="floatingLogin" data-role="popup" class="ui-content" style="min-width:250px;">
+
+                        <form id="loginForm" name="loginForm" data-ajax="false">
+                            <div>
+                                 <h3>Login information</h3>
+                                <label for="user" class="ui-hidden-accessible">Username:</label>
+                                <input type="text" name="user" value="" placeholder="Username" />
+                                <label for="password" class="ui-hidden-accessible">Password:</label>
+                                <input type="password" name="password" value="" placeholder="Password" />
+                                <input type="button" id="loginSubmitBtn" data-inline="true" value="Login" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="floatingFactorVerification" data-role="popup" class="ui-content" style="min-width:250px;">
+                    <form id="factorVerificationForm" name="factorVerificationForm" data-ajax="false">
+                        <div>
+                             <h3>Verify Multifactor</h3>
+                            <label for="passCode" class="ui-hidden-accessible">Pass Code:</label>
+                            <input type="text" name="passCode" placeholder="passCode" />
+                            <input type="hidden" id="refurl" name="refurl" />
+                            <input type="hidden" id="posturl" name="posturl" value="/verifyFactor" />
+                            <input type="button" id="factorVerificationSubmitBtn" data-inline="true" value="Verify" />
+                        </div>
+                    </form>
+                </div>
+                <div id="registerLink" class="hideMe">
+                    <a href="#floatingRegister" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-check ui-btn-icon-left">Register New Account</a>
+                    <div id="floatingRegister" data-role="popup" class="ui-content" style="min-width:250px;">
+
+                        <form id="registraionForm" name="loginForm" method="POST" data-ajax="false">
+                            <div>
+                                <h3>Registration information</h3>
+                                <label for="firstName" class="ui-hidden-accessible">First Name:</label>
+                                <input type="text" name="firstName" placeholder="First Name" value="" />
+                                <label for="lastName" class="ui-hidden-accessible">Last Name:</label>
+                                <input type="text" name="lastName" placeholder="Last Name" value="" />
+                                <label for="email" class="ui-hidden-accessible">Email:</label>
+                                <input type="text" name="email" placeholder="Email" value="" />
+                                <label for="mobile" class="ui-hidden-accessible">Mobile:</label>
+                                <input type="text" name="mobile" placeholder="Mobile" value="" />
+                                <label for="password" class="ui-hidden-accessible">Password:</label>
+                                <input type="password" name="password" placeholder="Password" value="" />
+                                <label for="confpassword" class="ui-hidden-accessible">Confirm Password:</label>
+                                <input type="password" name="confpassword" placeholder="Confirm Password"  value="" />
+                                <input type="button" id="registerSubmitBtn" data-inline="true" value="Register" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="displayName" class="hideMe">
+                    <div>Hi&nbsp;</div><div id="userName"></div>
+                </div>
+            </div>
+            <div data-role="footer">
+                <h1>My Great Compnay! All Rights Reserved.</h1>
+            </div>
+        </div>
+    </body>
+</html>
