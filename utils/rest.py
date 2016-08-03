@@ -1,5 +1,6 @@
 import requests
 import json
+import config
 
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 from requests.packages.urllib3.exceptions import SNIMissingWarning
@@ -7,11 +8,11 @@ from requests.packages.urllib3.exceptions import SNIMissingWarning
 
 class OktaUtil:
     # TODO: This should be configuration driven
-    REST_HOST = "https://<your okta domain>.okta.com"
-    REST_TOKEN = "<Okta API Token>"
+    REST_HOST = None
+    REST_TOKEN = None
     OKTA_SESSION_ID_KEY = "okta_session_id"
     OKTA_SESSION_TOKEN_KEY = "okta_session_id"
-    DEVICE_TOKEN = "<generated guid that identifies this machine>"
+    DEVICE_TOKEN = None
     OKTA_HEADERS = {}
 
     def __init__(self):
@@ -22,6 +23,11 @@ class OktaUtil:
             "Content-Type": "application/json",
             "Authorization": "SSWS {api_token}".format(api_token=self.REST_TOKEN)
         }
+
+        self.REST_HOST = config.okta_host_config["host"]
+        self.REST_TOKEN = config.okta_host_config["api_key"]
+        self.DEVICE_TOKEN = config.okta_host_config["device_token"]
+
 
     def authenticate(self, username, password):
         print("authenticate()")
@@ -84,7 +90,7 @@ class OktaUtil:
                 "login": email
             },
             "credentials": {
-                "password" : { "value": password }
+                "password": {"value": password}
             }
         }
 
