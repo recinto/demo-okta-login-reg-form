@@ -1,11 +1,11 @@
 import os
 import json
 
-from flask import Flask, request, session
+from flask import Flask, request, session, send_from_directory
 from utils.rest import OktaUtil
 
 
-app = Flask(__name__, static_url_path="")
+app = Flask(__name__)
 app.secret_key = "6w_#w*~AVts3!*yd&C]jP0(x_1ssd]MVgzfAw8%fF+c@|ih0s1H&yZQC&-u~O[--"  # For the session
 
 
@@ -152,6 +152,24 @@ def verifyFactor():
     session[okta_util.OKTA_SESSION_ID_KEY] = session_response["id"]
 
     return json.dumps(factor_response)
+
+
+@app.route('/js/<path:filename>')
+def serve_static_js(filename):
+    root_dir = os.path.dirname(os.path.realpath(__file__))
+    return send_from_directory(os.path.join(root_dir, 'static', 'js'), filename)
+
+
+@app.route('/css/<path:filename>')
+def serve_static_css(filename):
+    root_dir = os.path.dirname(os.path.realpath(__file__))
+    return send_from_directory(os.path.join(root_dir, 'static', 'css'), filename)
+
+
+@app.route('/img/<path:filename>')
+def serve_static_img(filename):
+    root_dir = os.path.dirname(os.path.realpath(__file__))
+    return send_from_directory(os.path.join(root_dir, 'static', 'img'), filename)
 
 
 if __name__ == "__main__":
