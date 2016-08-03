@@ -18,15 +18,16 @@ class OktaUtil:
     def __init__(self):
         # This is to supress the warnings for the older version
         requests.packages.urllib3.disable_warnings((InsecurePlatformWarning, SNIMissingWarning))
+
+        self.REST_HOST = config.okta_host_config["host"]
+        self.REST_TOKEN = config.okta_host_config["api_key"]
+        self.DEVICE_TOKEN = config.okta_host_config["device_token"]
+
         self.OKTA_HEADERS = {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": "SSWS {api_token}".format(api_token=self.REST_TOKEN)
         }
-
-        self.REST_HOST = config.okta_host_config["host"]
-        self.REST_TOKEN = config.okta_host_config["api_key"]
-        self.DEVICE_TOKEN = config.okta_host_config["device_token"]
 
 
     def authenticate(self, username, password):
