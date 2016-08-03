@@ -16,7 +16,6 @@ def root():
 @app.route("/register", methods=["POST"])
 def register():
 
-    result = {}
     okta_util = OktaUtil()
 
     first_name = request.form["firstName"]
@@ -25,10 +24,10 @@ def register():
     mobile = request.form["mobile"]
     password = request.form["password"]
 
-    user_info = okta_util.create_user(first_name = first_name,
-                                      last_name = last_name,
-                                      email = email,
-                                      password = password);
+    user_info = okta_util.create_user(first_name=first_name,
+                                      last_name=last_name,
+                                      email=email,
+                                      password=password)
 
     user_id = user_info["id"]
 
@@ -43,6 +42,7 @@ def register():
     activate_response = okta_util.activate_sms_factor(url=activate_url)
 
     return json.dumps(activate_response)
+
 
 @app.route("/activate", methods=["POST"])
 def activate():
@@ -59,6 +59,7 @@ def activate():
         response["factorResult"] = "SUCCESS"
 
     return json.dumps(response)
+
 
 @app.route("/createsession", methods=["GET"])
 def create_session():
@@ -78,6 +79,7 @@ def create_session():
         print "failed to create session"
 
     return json.dumps(result)
+
 
 @app.route("/isloggedin", methods=["GET"])
 def is_logged_in():
@@ -112,6 +114,7 @@ def get_user():
         print "no user logged in"
 
     return json.dumps(response)
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -150,7 +153,11 @@ def verifyFactor():
     return json.dumps(factor_response)
 
 
-if __name__ == "__main__":
-
+def application():
     app.secret_key = "6w_#w*~AVts3!*yd&C]jP0(x_1ssd]MVgzfAw8%fF+c@|ih0s1H&yZQC&-u~O[--"  # For the session
     app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)))
+
+
+if __name__ == "__main__":
+
+    application()
