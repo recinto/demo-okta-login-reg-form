@@ -44,8 +44,10 @@ $(document).on('click', '#loginSubmitBtn', function() {
         $("#floatingLogin").popup("close");
         console.log(data);
         results = JSON.parse(data);
-        $("#refurl").val(results._links.verify.href);
-        $("#floatingFactorVerification").popup();
+        if(results._links.verify) {
+            $("#refurl").val(results._links.verify.href);
+        }
+        openFactorVerificationPopup();
     }).done(function() {
         console.log( "done" );
     }).fail(function() {
@@ -92,6 +94,7 @@ $(document).on('click', '#registerSubmitBtn', function() {
         console.log(data);
         results = JSON.parse(data);
         $("#refurl").val(results._links.activate.href);
+        openFactorVerificationPopup();
     }).done(function() {
         console.log( "done" );
     }).fail(function() {
@@ -104,8 +107,6 @@ $(document).on('click', '#registerSubmitBtn', function() {
 
 $( document ).bind ("pageinit", function() {
     $("#floatingFactorVerification").popup();
-    $("#floatingLogin").on("popupafterclose", openFactorVerificationPopup);
-    $("#floatingRegister").on("popupafterclose", openFactorVerificationPopup);
 });
 
 $(document).ready(function() {
