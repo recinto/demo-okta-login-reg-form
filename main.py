@@ -13,6 +13,64 @@ app.secret_key = "6w_#w*~AVts3!*yd&C]jP0(x_1ssd]MVgzfAw8%fF+c@|ih0s1H&yZQC&-u~O[
 def root():
     return app.send_static_file("index.html")
 
+@app.route("/admin", methods=["GET"])
+def admin():
+    # TODO: apply rules to restrict access
+    return app.send_static_file("admin.html")
+
+@app.route("/admin/users", methods=["GET"])
+def list_users():
+    okta_util = OktaUtil()
+
+    user_list = okta_util.list_users(25) #  TODO: make this configurable
+
+    return json.dumps(user_list)
+
+@app.route("/admin/users", methods=["POST"])
+def create_user():
+    print "create_user"
+    okta_util = OktaUtil()
+
+    first_name = request.form["firstName"]
+    last_name = request.form["lastName"]
+    email = request.form["email"]
+    mobile = request.form["mobile"]
+    password = request.form["password"]
+
+    user_info = okta_util.create_user(first_name=first_name,
+                                      last_name=last_name,
+                                      email=email,
+                                      phone=mobile,
+                                      password=password)
+
+    return json.dumps(user_info)
+
+
+@app.route("/admin/usersx/<user_id>", methods=["POST"])
+def update_user(user_id):
+    print "update_user"
+    okta_util = OktaUtil()
+
+    first_name = request.form["firstName"]
+    last_name = request.form["lastName"]
+    email = request.form["email"]
+    mobile = request.form["mobile"]
+
+    user_info = okta_util.update_user(user_id=user_id,
+                                      first_name=first_name,
+                                      last_name=last_name,
+                                      email=email,
+                                      phone=mobile)
+
+    return json.dumps(user_info)
+
+@app.route("/admin/users/<user_id>", methods=["DELETE"])
+def deactivate_user(user_id):
+    okta_util = OktaUtil()
+
+    user_info = okta_util.deactivate_user(user_id=user_id)
+
+    return json.dumps(user_info)
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -28,6 +86,7 @@ def register():
     user_info = okta_util.create_user(first_name=first_name,
                                       last_name=last_name,
                                       email=email,
+                                      phone=mobile,
                                       password=password)
 
     user_id = user_info["id"]

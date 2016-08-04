@@ -81,19 +81,41 @@ class OktaUtil:
 
         return self.execute_get(url, body)
 
-    def create_user(self, first_name, last_name, email, password):
+    def create_user(self, first_name, last_name, email, phone, password):
+        print "create_user"
         url = "{host}/api/v1/users?activate=true".format(host=self.REST_HOST)
         body = {
             "profile": {
                 "firstName": first_name,
                 "lastName": last_name,
                 "email": email,
-                "login": email
+                "login": email,
+                "mobilePhone": phone,
             },
             "credentials": {
                 "password": {"value": password}
             }
         }
+
+        return self.execute_post(url, body)
+
+    def update_user(self, user_id, first_name, last_name, email, phone):
+        print "update_user"
+        url = "{host}/api/v1/users/{user_id}".format(host=self.REST_HOST, user_id=user_id)
+        body = {
+            "profile": {
+                "firstName": first_name,
+                "lastName": last_name,
+                "email": email,
+                "mobilePhone": phone,
+            }
+        }
+
+        return self.execute_put(url, body)
+
+    def deactivate_user(self, user_id):
+        url = "{host}/api/v1/users/{user_id}/lifecycle/deactivate".format(host=self.REST_HOST, user_id=user_id)
+        body = {}
 
         return self.execute_post(url, body)
 
@@ -120,8 +142,12 @@ class OktaUtil:
 
     def extend_session(self, url):
         body = {}
-
         return self.execute_post(url, body)
+
+    def list_users(self, limit):
+        url = "{host}/api/v1/users?filter=status eq \"ACTIVE\"&limit={limit}".format(host=self.REST_HOST, limit=limit)
+        body = {}
+        return self.execute_get(url, body)
 
     def execute_post(self, url, body):
         print url

@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>My Great Company - Admin</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="/css/site.css" />
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src="/js/admin.js"></script>
+    </head>
+    <body>
+        <div data-role="page">
+            <div data-role="header">
+                <div>
+                    <img src="/img/logo.png" />
+                </div>
+                <div>This is My Great Compnay!  We do GREAT things here.  Bask in our Greatness!!!</div>
+            </div>
+            <div data-role="main" class="ui-content">
+                <a href="#editUserPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-check ui-btn-icon-left">Create New User</a>
+                <div id="editUserPopup" data-role="popup" class="ui-content" style="min-width:250px;">
+
+                    <form id="editUserForm" name="loginForm" method="POST" data-ajax="false">
+                        <div>
+                            <h3>User Information</h3>
+                            <label for="firstName" class="ui-hidden-accessible">First Name:</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="First Name" value="" />
+                            <label for="lastName" class="ui-hidden-accessible">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Last Name" value="" />
+                            <label for="email" class="ui-hidden-accessible">Email:</label>
+                            <input type="text" id="email" name="email" placeholder="Email" value="" />
+                            <label for="mobile" class="ui-hidden-accessible">Mobile:</label>
+                            <input type="text" id="mobile" name="mobile" placeholder="Mobile" value="" />
+                            <label for="password" class="ui-hidden-accessible">Password:</label>
+                            <input type="password" id="password" name="password" placeholder="Password" value="" />
+                            <input type="hidden" id="_id" name="_id" />
+                            <input type="button" id="editUserSubmitBtn" data-inline="true" value="Submit" />
+                        </div>
+                    </form>
+                </div>
+                <table data-role="table" id="usertable" data-mode="column" align="center">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div data-role="footer">
+                <h1>My Great Compnay! All Rights Reserved.</h1>
+            </div>
+        </div>
+    </body>
+</html>
