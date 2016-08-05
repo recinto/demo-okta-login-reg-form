@@ -34,7 +34,6 @@ function editUser(userId) {
     $("#editUserForm")[0].reset();
 
     $("#email").val($("#row_" + userId + "_email").html());
-    console.log($("#email").val());
     $("#firstName").val($("#row_" + userId + "_firstName").html());
     $("#lastName").val($("#row_" + userId + "_lastName").html());
     $("#mobile").val($("#row_" + userId + "_mobilePhone").html());
@@ -109,6 +108,7 @@ $(document).on('click', '#editUserSubmitBtn', function() {
 
 $(document).on('popupafterclose', '#editUserPopup', function() {
     $("#password").show();
+    $("#editUserForm")[0].reset();
 });
 
 $(document).ready(function() {
