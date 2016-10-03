@@ -1,6 +1,7 @@
 import requests
 import json
 import config
+import traceback
 
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 from requests.packages.urllib3.exceptions import SNIMissingWarning
@@ -99,7 +100,7 @@ class OktaUtil:
 
         return self.execute_post(url, body)
 
-    def update_user(self, user_id, first_name, last_name, email, phone):
+    def update_user(self, user_id, first_name, last_name, email, phone, accountLinks):
         print "update_user"
         url = "{host}/api/v1/users/{user_id}".format(host=self.REST_HOST, user_id=user_id)
         body = {
@@ -108,10 +109,11 @@ class OktaUtil:
                 "lastName": last_name,
                 "email": email,
                 "mobilePhone": phone,
+                "custom_account_links" : accountLinks.strip().split(',')
             }
         }
 
-        return self.execute_put(url, body)
+        return self.execute_post(url, body)
 
     def deactivate_user(self, user_id):
         url = "{host}/api/v1/users/{user_id}/lifecycle/deactivate".format(host=self.REST_HOST, user_id=user_id)
@@ -149,6 +151,34 @@ class OktaUtil:
         body = {}
         return self.execute_get(url, body)
 
+    def list_user_schema(self):
+        url = "{host}/api/v1/meta/schemas/user/default".format(host=self.REST_HOST)
+        body = {}
+        return self.execute_get(url, body)
+
+    def reset_all_user_account_link(self):
+        # Get all users
+        users = self.list_users(10) # yeah not the greatest... need to make this smarter... this is just here for quick demo purposes
+        # set each user's accounts to be blank
+
+        try:
+            for user in users:
+                user["profile"]["custom_account_links"] = ""
+                # update each user
+                print "Updating User: " + user["id"]
+                self.update_user(
+                    user["id"],
+                    user["profile"]["firstName"],
+                    user["profile"]["lastName"],
+                    user["profile"]["email"],
+                    user["profile"]["mobilePhone"],
+                    user["profile"]["custom_account_links"])
+
+            return {"status":"OK", "message":"all User Account Links set to blank"}
+        except:
+            traceback.print_exc()
+            return {"status":"ERROR", "message":"Failed to reset all account links"}
+
     def execute_post(self, url, body):
         print url
         print body
@@ -156,7 +186,7 @@ class OktaUtil:
         rest_response = requests.post(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()
 
-        print json.dumps(response_json, indent=4, sort_keys=True)
+        # print json.dumps(response_json, indent=4, sort_keys=True)
         return response_json
 
     def execute_put(self, url, body):
@@ -166,7 +196,7 @@ class OktaUtil:
         rest_response = requests.put(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()
 
-        print json.dumps(response_json, indent=4, sort_keys=True)
+        # print json.dumps(response_json, indent=4, sort_keys=True)
         return response_json
 
     def execute_get(self, url, body):
@@ -176,5 +206,5 @@ class OktaUtil:
         rest_response = requests.get(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()
 
-        print json.dumps(response_json, indent=4, sort_keys=True)
+        # print json.dumps(response_json, indent=4, sort_keys=True)
         return response_json

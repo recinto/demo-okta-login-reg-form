@@ -25,6 +25,7 @@ function renderRow(tableBody, userData){
     addTD(row, "firstName", userData.profile.firstName);
     addTD(row, "lastName", userData.profile.lastName);
     addTD(row, "mobilePhone", userData.profile.mobilePhone);
+    addTD(row, "accountLinks", userData.profile.custom_account_links ? userData.profile.custom_account_links : "");
     addTD(row, "action", "<a href=\"javascript:editUser('" + userData.id + "')\">edit</a> | <a href=\"javascript:deleteUser('" + userData.id + "')\">deactivate</a>");
 
     tableBody.append(row.outerHTML);
@@ -37,6 +38,8 @@ function editUser(userId) {
     $("#firstName").val($("#row_" + userId + "_firstName").html());
     $("#lastName").val($("#row_" + userId + "_lastName").html());
     $("#mobile").val($("#row_" + userId + "_mobilePhone").html());
+    $("#accountLinks").val($("#row_" + userId + "_accountLinks").html());
+
     $("#_id").val($("#row_" + userId + "_id").html());
     $("#password").hide();
 
@@ -49,7 +52,8 @@ function updateUser(userId) {
     }).done(function(data) {
         $("#editUserPopup").popup("close");
         console.log(data);
-        //$("#row_" + userId).remove();
+        //TODO: add better UX handling so as to not refresh the whole darn page
+        location.reload();
     }).fail(function() {
         console.log( "error" );
     }).always(function() {

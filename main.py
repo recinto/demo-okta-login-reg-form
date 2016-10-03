@@ -55,12 +55,14 @@ def update_user(user_id):
     last_name = request.form["lastName"]
     email = request.form["email"]
     mobile = request.form["mobile"]
+    accountLinks = request.form["accountLinks"]
 
     user_info = okta_util.update_user(user_id=user_id,
                                       first_name=first_name,
                                       last_name=last_name,
                                       email=email,
-                                      phone=mobile)
+                                      phone=mobile,
+                                      accountLinks=accountLinks)
 
     return json.dumps(user_info)
 
@@ -212,6 +214,19 @@ def verifyFactor():
 
     return json.dumps(factor_response)
 
+@app.route("/getuserschema", methods=["GET"])
+def get_user_schema():
+    print "get_user_schema()"
+    okta_util = OktaUtil()
+    response = okta_util.list_user_schema()
+    return json.dumps(response)
+
+@app.route("/resetalluseraccountlinks", methods=["GET"])
+def reset_all_user_account_links():
+    print "reset_all_user_account_links()"
+    okta_util = OktaUtil()
+    response = okta_util.reset_all_user_account_link()
+    return json.dumps(response)
 
 @app.route('/js/<path:filename>')
 def serve_static_js(filename):
