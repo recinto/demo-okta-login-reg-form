@@ -100,7 +100,7 @@ class OktaUtil:
 
         return self.execute_post(url, body)
 
-    def update_user(self, user_id, first_name, last_name, email, phone, accountLinks):
+    def update_user(self, user_id, first_name, last_name, email, phone, hpsMemberRecords):
         print "update_user"
         url = "{host}/api/v1/users/{user_id}".format(host=self.REST_HOST, user_id=user_id)
         body = {
@@ -109,7 +109,7 @@ class OktaUtil:
                 "lastName": last_name,
                 "email": email,
                 "mobilePhone": phone,
-                "custom_account_links" : accountLinks.strip().split(',')
+                "hpsMemberRecords" : hpsMemberRecords.strip().split(',')
             }
         }
 
@@ -156,14 +156,14 @@ class OktaUtil:
         body = {}
         return self.execute_get(url, body)
 
-    def reset_all_user_account_link(self):
+    def reset_hps(self):
         # Get all users
-        users = self.list_users(10) # yeah not the greatest... need to make this smarter... this is just here for quick demo purposes
+        users = self.list_users(100) # yeah not the greatest... need to make this smarter... this is just here for quick demo purposes
         # set each user's accounts to be blank
 
         try:
             for user in users:
-                user["profile"]["custom_account_links"] = ""
+                user["profile"]["hpsMemberRecords"] = ""
                 # update each user
                 print "Updating User: " + user["id"]
                 self.update_user(
@@ -172,12 +172,12 @@ class OktaUtil:
                     user["profile"]["lastName"],
                     user["profile"]["email"],
                     user["profile"]["mobilePhone"],
-                    user["profile"]["custom_account_links"])
+                    user["profile"]["hpsMemberRecords"])
 
-            return {"status":"OK", "message":"all User Account Links set to blank"}
+            return {"status":"OK", "message":"all User Member Records set to blank"}
         except:
             traceback.print_exc()
-            return {"status":"ERROR", "message":"Failed to reset all account links"}
+            return {"status":"ERROR", "message":"Failed to reset all member records"}
 
     def execute_post(self, url, body):
         print url

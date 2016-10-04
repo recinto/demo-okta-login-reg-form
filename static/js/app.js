@@ -7,7 +7,9 @@ function showLoggedInStatus() {
             $("#registerLink").hide();
 
             $.getJSON("/getuser", function( data ) {
+                console.log(data);
                 $("#userName").html(data.firstName);
+                renderMemberRecords(data.hpsMemberRecords);
                 $("#displayName").show();
                 $.mobile.loading( "hide" );
             });
@@ -35,6 +37,22 @@ function createSession() {
             showLoggedInStatus();
         }
     });
+}
+
+function renderMemberRecords(memberRecordList) {
+    var output = "No Member Records Assigned"
+    if(memberRecordList) {
+        if(memberRecordList.length > 0) {
+            if(memberRecordList[0] != "") {
+                output = "";
+                for(var i = 0; i < memberRecordList.length; i++) {
+                    output += memberRecordList[i] + "<br />";
+                }
+            }
+        }
+    }
+
+    $("#memberRecordList").html(output);
 }
 
 $(document).on('click', '#loginSubmitBtn', function() {

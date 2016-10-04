@@ -55,14 +55,14 @@ def update_user(user_id):
     last_name = request.form["lastName"]
     email = request.form["email"]
     mobile = request.form["mobile"]
-    accountLinks = request.form["accountLinks"]
+    hpsMemberRecords = request.form["hpsMemberRecords"]
 
     user_info = okta_util.update_user(user_id=user_id,
                                       first_name=first_name,
                                       last_name=last_name,
                                       email=email,
                                       phone=mobile,
-                                      accountLinks=accountLinks)
+                                      hpsMemberRecords=hpsMemberRecords)
 
     return json.dumps(user_info)
 
@@ -172,6 +172,7 @@ def get_user():
         print json.dumps(user_info, indent=4, sort_keys=False)
         response["firstName"] = user_info["profile"]["firstName"]
         response["lastName"] = user_info["profile"]["lastName"]
+        response["hpsMemberRecords"] = user_info["profile"]["hpsMemberRecords"]
     except:
         print "no user logged in"
 
@@ -221,11 +222,11 @@ def get_user_schema():
     response = okta_util.list_user_schema()
     return json.dumps(response)
 
-@app.route("/resetalluseraccountlinks", methods=["GET"])
-def reset_all_user_account_links():
-    print "reset_all_user_account_links()"
+@app.route("/resethps", methods=["GET"])
+def reset_hps():
+    print "reset_hps()"
     okta_util = OktaUtil()
-    response = okta_util.reset_all_user_account_link()
+    response = okta_util.reset_hps()
     return json.dumps(response)
 
 @app.route('/js/<path:filename>')

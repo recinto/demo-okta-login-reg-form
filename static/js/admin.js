@@ -25,7 +25,7 @@ function renderRow(tableBody, userData){
     addTD(row, "firstName", userData.profile.firstName);
     addTD(row, "lastName", userData.profile.lastName);
     addTD(row, "mobilePhone", userData.profile.mobilePhone);
-    addTD(row, "accountLinks", userData.profile.custom_account_links ? userData.profile.custom_account_links : "");
+    addTD(row, "hpsMemberRecords", userData.profile.hpsMemberRecords ? userData.profile.hpsMemberRecords : "");
     addTD(row, "action", "<a href=\"javascript:editUser('" + userData.id + "')\">edit</a> | <a href=\"javascript:deleteUser('" + userData.id + "')\">deactivate</a>");
 
     tableBody.append(row.outerHTML);
@@ -38,7 +38,7 @@ function editUser(userId) {
     $("#firstName").val($("#row_" + userId + "_firstName").html());
     $("#lastName").val($("#row_" + userId + "_lastName").html());
     $("#mobile").val($("#row_" + userId + "_mobilePhone").html());
-    $("#accountLinks").val($("#row_" + userId + "_accountLinks").html());
+    $("#hpsMemberRecords").val($("#row_" + userId + "_hpsMemberRecords").html());
 
     $("#_id").val($("#row_" + userId + "_id").html());
     $("#password").hide();
