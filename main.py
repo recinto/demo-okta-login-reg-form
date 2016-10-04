@@ -179,9 +179,9 @@ def get_user():
     return json.dumps(response)
 
 
-@app.route("/login", methods=["POST"])
-def login():
-    print "login()"
+@app.route("/loginMFA", methods=["POST"])
+def loginMFA():
+    print "loginMFA()"
 
     okta_util = OktaUtil()
 
@@ -196,6 +196,32 @@ def login():
     push_factor_response = okta_util.push_factor_verification(user_id=user_id, factor_id=factor_id)
 
     return json.dumps(push_factor_response)
+
+@app.route("/login", methods=["POST"])
+def login():
+    print "login()"
+
+    okta_util = OktaUtil()
+
+    user = request.form["user"]
+    pwd = request.form["password"]
+
+    auth = okta_util.authenticate(username=user, password=pwd)
+    session[okta_util.OKTA_SESSION_TOKEN_KEY] = auth["sessionToken"]
+    user_id = auth["_embedded"]["user"]["id"]
+    session_response = okta_util.create_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
+    session[okta_util.OKTA_SESSION_ID_KEY] = session_response["id"]
+
+    return json.dumps(session_response)
+
+@app.route("/logout", methods=["GET"])
+def logout():
+    print "logout()"
+    okta_util = OktaUtil()
+    session_response = okta_util.close_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
+    session[okta_util.OKTA_SESSION_ID_KEY] = None
+
+    return json.dumps(session_response)
 
 
 @app.route("/verifyFactor", methods=["POST"])

@@ -68,6 +68,11 @@ class OktaUtil:
         body = {}
         return self.execute_get(url, body)
 
+    def close_session(self, session_id):
+        url = "{host}/api/v1/sessions/{session_id}".format(host=self.REST_HOST, session_id=session_id)
+        body = {}
+        return self.execute_delete(url, body)
+
     def create_session(self, session_token):
         url = "{host}/api/v1/sessions?additionalFields=cookieToken".format(host=self.REST_HOST)
         body = {
@@ -195,6 +200,19 @@ class OktaUtil:
 
         rest_response = requests.put(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()
+
+        # print json.dumps(response_json, indent=4, sort_keys=True)
+        return response_json
+
+    def execute_delete(self, url, body):
+        print url
+        print body
+
+        rest_response = requests.delete(url, headers=self.OKTA_HEADERS, json=body)
+        try:
+            response_json = rest_response.json()
+        except:
+            response_json = {"status":"none"}
 
         # print json.dumps(response_json, indent=4, sort_keys=True)
         return response_json

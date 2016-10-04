@@ -62,10 +62,12 @@ $(document).on('click', '#loginSubmitBtn', function() {
         $("#floatingLogin").popup("close");
         console.log(data);
         results = JSON.parse(data);
-        if(results._links.verify) {
-            $("#refurl").val(results._links.verify.href);
+        if("ACTIVE" == results.status) {
+            console.log("show logged in status");
+            showLoggedInStatus();
+        } else {
+            //Show not logged in
         }
-        openFactorVerificationPopup();
     }).done(function() {
         console.log( "done" );
     }).fail(function() {
