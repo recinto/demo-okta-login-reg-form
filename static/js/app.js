@@ -58,17 +58,22 @@ function renderMemberRecords(memberRecordList) {
 $(document).on('click', '#loginSubmitBtn', function() {
     $.mobile.loading( "show" );
     $("#posturl").val("/verifyFactor");
-    /*
+/*
     //MFA Login
     $.post( "/loginMFA", $("#loginForm").serialize(), function( data ) {
         $("#floatingLogin").popup("close");
         console.log(data);
         results = JSON.parse(data);
-        if(results._links.verify) {
-            $("#refurl").val(results._links.verify.href);
+
+        if("FAILED" != results.status) {
+            if(results._links.verify) {
+                $("#refurl").val(results._links.verify.href);
+            }
+            openFactorVerificationPopup();
+        } else {
+            alert(results.message);
         }
-        openFactorVerificationPopup();
-    */
+*/
 
     // No MFA Login
     $.post( "/login", $("#loginForm").serialize(), function( data ) {

@@ -189,11 +189,16 @@ def loginMFA():
     pwd = request.form["password"]
 
     auth = okta_util.authenticate(username=user, password=pwd)
-    session[okta_util.OKTA_SESSION_TOKEN_KEY] = auth["sessionToken"]
-    user_id = auth["_embedded"]["user"]["id"]
-    factors = okta_util.list_factors(user_id=user_id)
-    factor_id = factors[0]["id"]
-    push_factor_response = okta_util.push_factor_verification(user_id=user_id, factor_id=factor_id)
+    try:
+        session[okta_util.OKTA_SESSION_TOKEN_KEY] = auth["sessionToken"]
+        user_id = auth["_embedded"]["user"]["id"]
+        factors = okta_util.list_factors(user_id=user_id)
+        factor_id = factors[0]["id"]
+        push_factor_response = okta_util.push_factor_verification(user_id=user_id, factor_id=factor_id)
+    except:
+        session[okta_util.OKTA_SESSION_TOKEN_KEY] = None
+        user_id = None
+        push_factor_response = {"status":"FAILED", "message":"Authentication Failed"}
 
     return json.dumps(push_factor_response)
 
