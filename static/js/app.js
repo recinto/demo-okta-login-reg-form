@@ -58,6 +58,19 @@ function renderMemberRecords(memberRecordList) {
 $(document).on('click', '#loginSubmitBtn', function() {
     $.mobile.loading( "show" );
     $("#posturl").val("/verifyFactor");
+    /*
+    //MFA Login
+    $.post( "/loginMFA", $("#loginForm").serialize(), function( data ) {
+        $("#floatingLogin").popup("close");
+        console.log(data);
+        results = JSON.parse(data);
+        if(results._links.verify) {
+            $("#refurl").val(results._links.verify.href);
+        }
+        openFactorVerificationPopup();
+    */
+
+    // No MFA Login
     $.post( "/login", $("#loginForm").serialize(), function( data ) {
         $("#floatingLogin").popup("close");
         console.log(data);
@@ -66,8 +79,9 @@ $(document).on('click', '#loginSubmitBtn', function() {
             console.log("show logged in status");
             showLoggedInStatus();
         } else {
-            //Show not logged in
+            alert(results.message);
         }
+
     }).done(function() {
         console.log( "done" );
     }).fail(function() {

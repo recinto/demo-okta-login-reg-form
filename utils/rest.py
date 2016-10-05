@@ -16,7 +16,7 @@ class OktaUtil:
     DEVICE_TOKEN = None
     OKTA_HEADERS = {}
 
-    def __init__(self):
+    def __init__(self, headers):
         # This is to supress the warnings for the older version
         requests.packages.urllib3.disable_warnings((InsecurePlatformWarning, SNIMissingWarning))
 
@@ -27,7 +27,11 @@ class OktaUtil:
         self.OKTA_HEADERS = {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "Authorization": "SSWS {api_token}".format(api_token=self.REST_TOKEN)
+            "Authorization": "SSWS {api_token}".format(api_token=self.REST_TOKEN),
+            "User-Agent": headers["User-Agent"],
+            "X-Forwarded-For": headers["X-Forwarded-For"],
+            "X-Forwarded-Port": headers["X-Forwarded-Port"],
+            "X-Forwarded-Proto": headers["X-Forwarded-Proto"]
         }
 
 
@@ -168,7 +172,7 @@ class OktaUtil:
 
         try:
             for user in users:
-                user["profile"]["hpsMemberRecords"] = ""
+                user["profile"]["hpsMemberRecords"] = "<a href='javascript:alert(\"Claim Link 1!!!\")'>Claim Link 1</a>,<a href='javascript:alert(\"Claim Link 2!!!\")'>Claim Link 2</a>"
                 # update each user
                 print "Updating User: " + user["id"]
                 self.update_user(
@@ -220,6 +224,7 @@ class OktaUtil:
     def execute_get(self, url, body):
         print url
         print body
+        print self.OKTA_HEADERS
 
         rest_response = requests.get(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()

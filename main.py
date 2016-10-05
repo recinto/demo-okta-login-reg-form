@@ -20,7 +20,7 @@ def admin():
 
 @app.route("/admin/users", methods=["GET"])
 def list_users():
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     user_list = okta_util.list_users(25) #  TODO: make this configurable
 
@@ -29,7 +29,7 @@ def list_users():
 @app.route("/admin/users", methods=["POST"])
 def create_user():
     print "create_user"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     first_name = request.form["firstName"]
     last_name = request.form["lastName"]
@@ -49,7 +49,7 @@ def create_user():
 @app.route("/admin/usersx/<user_id>", methods=["POST"])
 def update_user(user_id):
     print "update_user"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     first_name = request.form["firstName"]
     last_name = request.form["lastName"]
@@ -68,7 +68,7 @@ def update_user(user_id):
 
 @app.route("/admin/users/<user_id>", methods=["DELETE"])
 def deactivate_user(user_id):
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     user_info = okta_util.deactivate_user(user_id=user_id)
 
@@ -77,7 +77,7 @@ def deactivate_user(user_id):
 @app.route("/register", methods=["POST"])
 def register():
 
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     first_name = request.form["firstName"]
     last_name = request.form["lastName"]
@@ -109,7 +109,7 @@ def register():
 @app.route("/activate", methods=["POST"])
 def activate():
     print "activate()"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
     response = {"factorResult": "FAILED"}
 
     activate_url = request.form["refurl"]
@@ -129,7 +129,7 @@ def create_session():
     result = {"success": False}
 
     try:
-        okta_util = OktaUtil()
+        okta_util = OktaUtil(request.headers)
         # Create Session
         session_response = okta_util.create_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
         session[okta_util.OKTA_SESSION_ID_KEY] = session_response["id"]
@@ -150,7 +150,7 @@ def is_logged_in():
     result = {"isLoggedIn": False}
 
     try:
-        okta_util = OktaUtil()
+        okta_util = OktaUtil(request.headers)
         session_response = okta_util.validate_session(session[okta_util.OKTA_SESSION_ID_KEY])
         print session_response
         url = session_response["_links"]["refresh"]["href"]
@@ -167,7 +167,7 @@ def get_user():
     print "get_user()"
     response = {}
     try:
-        okta_util = OktaUtil()
+        okta_util = OktaUtil(request.headers)
         user_info = okta_util.get_curent_user(session[okta_util.OKTA_SESSION_ID_KEY])
         print json.dumps(user_info, indent=4, sort_keys=False)
         response["firstName"] = user_info["profile"]["firstName"]
@@ -183,7 +183,7 @@ def get_user():
 def loginMFA():
     print "loginMFA()"
 
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     user = request.form["user"]
     pwd = request.form["password"]
@@ -201,23 +201,29 @@ def loginMFA():
 def login():
     print "login()"
 
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     user = request.form["user"]
     pwd = request.form["password"]
 
     auth = okta_util.authenticate(username=user, password=pwd)
-    session[okta_util.OKTA_SESSION_TOKEN_KEY] = auth["sessionToken"]
-    user_id = auth["_embedded"]["user"]["id"]
-    session_response = okta_util.create_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
-    session[okta_util.OKTA_SESSION_ID_KEY] = session_response["id"]
+
+    try:
+        session[okta_util.OKTA_SESSION_TOKEN_KEY] = auth["sessionToken"]
+        user_id = auth["_embedded"]["user"]["id"]
+        session_response = okta_util.create_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
+        session[okta_util.OKTA_SESSION_ID_KEY] = session_response["id"]
+    except:
+        session[okta_util.OKTA_SESSION_TOKEN_KEY] = None
+        user_id = None
+        session_response = {"status":"FAILED", "message":"Authentication Failed"}
 
     return json.dumps(session_response)
 
 @app.route("/logout", methods=["GET"])
 def logout():
     print "logout()"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
     session_response = okta_util.close_session(session[okta_util.OKTA_SESSION_TOKEN_KEY])
     session[okta_util.OKTA_SESSION_ID_KEY] = None
 
@@ -228,7 +234,7 @@ def logout():
 def verifyFactor():
     print "verifyFactor()"
 
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
 
     verify_url = request.form["refurl"]
     verification_Value = request.form["passCode"]
@@ -244,14 +250,14 @@ def verifyFactor():
 @app.route("/getuserschema", methods=["GET"])
 def get_user_schema():
     print "get_user_schema()"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
     response = okta_util.list_user_schema()
     return json.dumps(response)
 
 @app.route("/resethps", methods=["GET"])
 def reset_hps():
     print "reset_hps()"
-    okta_util = OktaUtil()
+    okta_util = OktaUtil(request.headers)
     response = okta_util.reset_hps()
     return json.dumps(response)
 
