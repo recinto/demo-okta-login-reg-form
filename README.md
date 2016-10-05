@@ -29,3 +29,9 @@ Or run them individually
 Needed to install an update to fix a compatability issue
 
 `pip install requests --upgrade`
+
+## How to Run
+
+NOTE: You may need to configure ports to listen to for serviing up the site
+
+`python main.py`
