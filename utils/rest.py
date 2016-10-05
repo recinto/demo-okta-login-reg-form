@@ -224,7 +224,6 @@ class OktaUtil:
     def execute_get(self, url, body):
         print url
         print body
-        print self.OKTA_HEADERS
 
         rest_response = requests.get(url, headers=self.OKTA_HEADERS, json=body)
         response_json = rest_response.json()
