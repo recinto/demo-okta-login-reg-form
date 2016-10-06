@@ -22,7 +22,7 @@ def admin():
 def list_users():
     okta_util = OktaUtil(request.headers)
 
-    user_list = okta_util.list_users(25) #  TODO: make this configurable
+    user_list = okta_util.list_users(100) #  TODO: make this configurable
 
     return json.dumps(user_list)
 
@@ -90,7 +90,7 @@ def register():
                                       email=email,
                                       phone=mobile,
                                       password=password)
-
+    print user_info
     user_id = user_info["id"]
 
     # Authenticate
